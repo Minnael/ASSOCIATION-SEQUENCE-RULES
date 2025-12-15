@@ -1,7 +1,3 @@
-# Base de dados sequencial
-# Cada cliente é uma sequência de eventos
-# Cada evento é um conjunto de itens
-
 base_dados = [
     [ {"pao"}, {"leite"}, {"manteiga"} ],     # Cliente 1
     [ {"pao"}, {"leite"} ],                   # Cliente 2

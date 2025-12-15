@@ -1,9 +1,10 @@
 from collections import Counter
 from itertools import combinations
 
-# -----------------------------
-# Base de transações
-# -----------------------------
+
+# ////////////////////////
+# // BASE DE TRANSAÇÕES //
+# ////////////////////////
 transacoes = [
     {'a', 'b'},
     {'b', 'c', 'd'},
@@ -21,9 +22,11 @@ phi = 2  # suporte mínimo
 confianca_minima = 0.6
 num_transacoes = len(transacoes)
 
-# -----------------------------
-# Estrutura do nó da FP-Tree
-# -----------------------------
+
+
+# ////////////////////////////////
+# // ESTRUTURA DO NÓ DA FP-TREE //
+# ////////////////////////////////
 class NoFP:
     def __init__(self, item, pai):
         self.item = item
@@ -32,10 +35,16 @@ class NoFP:
         self.filhos = {}
         self.link = None
 
-# -----------------------------
-# Construção da FP-Tree
-# -----------------------------
+
+
+# ///////////////////////////
+# // CONSTRUÇÃO DA FP-TREE //
+# ///////////////////////////
 def construir_fp_tree(transacoes, phi):
+    """
+    Constrói a FP-Tree a partir das transações.
+    Retorna a tabela de cabeçalhos (header table) que aponta para os nós.
+    """
     contagem = Counter()
     for t in transacoes:
         contagem.update(t)
@@ -72,10 +81,16 @@ def construir_fp_tree(transacoes, phi):
 
     return tabela_header
 
-# -----------------------------
-# Mineração FP-Growth
-# -----------------------------
+
+
+# /////////////////////////
+# // MINERAÇÃO FP-GROWTH //
+# /////////////////////////
 def minerar_fp_growth(tabela_header, phi, sufixo, padroes):
+    """
+    Realiza a mineração recursiva de padrões frequentes usando FP-Growth.
+    Atualiza o dicionário 'padroes' com os itemsets frequentes encontrados.
+    """
     for item in tabela_header:
         padrao_atual = sufixo + [item]
 
@@ -105,9 +120,11 @@ def minerar_fp_growth(tabela_header, phi, sufixo, padroes):
             if nova_tabela:
                 minerar_fp_growth(nova_tabela, phi, padrao_atual, padroes)
 
-# -----------------------------
-# Execução FP-Growth
-# -----------------------------
+
+
+# ////////////////////////
+# // EXECUÇÃO FP-GROWTH //
+# ////////////////////////
 padroes_frequentes = {}
 tabela_header = construir_fp_tree(transacoes, phi)
 minerar_fp_growth(tabela_header, phi, [], padroes_frequentes)
@@ -116,9 +133,11 @@ print("\nITEMSETS FREQUENTES")
 for itens, sup in sorted(padroes_frequentes.items(), key=lambda x: (len(x[0]), x[0])):
     print(set(itens), "->", sup)
 
-# =========================================================
-# GERAÇÃO DAS REGRAS DE ASSOCIAÇÃO
-# =========================================================
+
+
+# //////////////////////////////////////
+# // GERAÇÃO DAS REGRAS DE ASSOCIAÇÃO //
+# //////////////////////////////////////
 print("\nREGRAS DE ASSOCIAÇÃO\n")
 
 regras = []
@@ -148,8 +167,10 @@ for itemset in padroes_frequentes:
                     lift
                 ))
 
-# -----------------------------
-# Resultado final das regras
-# -----------------------------
+
+
+# ////////////////////////////////
+# // RESULTADO FINAL DAS REGRAS //
+# ////////////////////////////////
 for a, c, s, conf, lift in regras:
     print(f"{a} -> {c} | suporte={s}, confiança={conf:.2f}, lift={lift:.2f}")
